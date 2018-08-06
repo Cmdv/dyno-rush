@@ -1,0 +1,88 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: ab88454366ba511a9a8da28cfe468da7189ae5723f26bdc8ac7c577d567bac6c
+
+name:           dino-rush
+version:        0.0.0
+synopsis:       A Skinner box, running platformer with a dinosaur
+description:    A Skinner box, running platformer with a dinosaur
+category:       Game
+homepage:       https://github.com/Cmdv/dino-rush#readme
+bug-reports:    https://github.com/Cmdv/dino-rush/issues
+maintainer:     Joe Vargas
+copyright:      2018 Joe Vargas
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    package.yaml
+    README.md
+    stack.yaml
+data-files:
+    resource/dino.json
+    resource/dino.png
+
+source-repository head
+  type: git
+  location: https://github.com/Cmdv/dino-rush
+
+library
+  exposed-modules:
+      DinoRush
+  other-modules:
+      Paths_dino_rush
+  hs-source-dirs:
+      library
+  default-extensions: DuplicateRecordFields FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase NamedFieldPuns ScopedTypeVariables OverloadedStrings
+  ghc-options: -Wall
+  build-depends:
+      StateVar
+    , aeson
+    , animate
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , key-state
+    , lens
+    , linear
+    , mtl
+    , random
+    , safe
+    , safe-exceptions
+    , sdl2
+    , sdl2-image
+    , sdl2-mixer
+    , sdl2-ttf
+    , text
+    , text-conversions
+  default-language: Haskell2010
+
+executable dino-rush
+  main-is: Main.hs
+  other-modules:
+      Paths_dino_rush
+  hs-source-dirs:
+      executable
+  default-extensions: DuplicateRecordFields FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase NamedFieldPuns ScopedTypeVariables OverloadedStrings
+  ghc-options: -Wall -rtsopts -threaded -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , dino-rush
+  default-language: Haskell2010
+
+test-suite dino-rush-tests
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_dino_rush
+  hs-source-dirs:
+      tests
+  default-extensions: DuplicateRecordFields FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving LambdaCase NamedFieldPuns ScopedTypeVariables OverloadedStrings
+  ghc-options: -Wall -rtsopts -threaded -with-rtsopts=-N
+  build-depends:
+      base
+    , dino-rush
+  default-language: Haskell2010
