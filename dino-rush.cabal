@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a8b1c2306b267a80fa8bae83865e3002122769505e4ed54fedfa8e2f429096dc
+-- hash: 5c6bc5de8e44cd393c1f6d1e2cf2289fa5b748c02162bd776dd54c1d14c49809
 
 name:           dino-rush
 version:        0.0.0
@@ -41,10 +41,30 @@ library
       DinoRush.Effect.Quake
       DinoRush.Effect.Renderer
       DinoRush.Effect.Sfx
+      DinoRush.Engine.Bird
+      DinoRush.Engine.Camera
+      DinoRush.Engine.Common
+      DinoRush.Engine.Dino
+      DinoRush.Engine.Font
+      DinoRush.Engine.Frame
+      DinoRush.Engine.GameOver
+      DinoRush.Engine.Input
+      DinoRush.Engine.Lava
+      DinoRush.Engine.Mountain
+      DinoRush.Engine.Obstacle
+      DinoRush.Engine.Physics
+      DinoRush.Engine.Play
+      DinoRush.Engine.Quake
+      DinoRush.Engine.River
+      DinoRush.Engine.Rock
       DinoRush.Engine.Scene
       DinoRush.Engine.Sfx
+      DinoRush.Engine.Step
+      DinoRush.Engine.Title
+      DinoRush.Engine.Types
       DinoRush.Manager.Input
       DinoRush.Manager.Scene
+      DinoRush.Resource
       DinoRush.Runner
       DinoRush.Scene.Death
       DinoRush.Scene.GameOver
@@ -52,6 +72,8 @@ library
       DinoRush.Scene.Play
       DinoRush.Scene.Title
       DinoRush.State
+      DinoRush.Wrapper.SDLInput
+      DinoRush.Wrapper.SDLRenderer
   other-modules:
       Paths_dino_rush
   hs-source-dirs:
@@ -97,6 +119,7 @@ test-suite dino-rush-tests
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
+      Spec
       Paths_dino_rush
   hs-source-dirs:
       tests

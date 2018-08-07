@@ -24,39 +24,24 @@ import DinoRush.Manager.Scene
 class Monad m => Title m where
   titleStep :: m ()
 
-titleStep' :: ( HasTitleVars s
-              , HasCommonVars s
-              , MonadReader Config m
-              , MonadState s m
-              , Renderer m
-              , HasInput m
-              , SceneManager m
-              , HUD m
-              , AudioSfx m) => m ()
+titleStep' :: (HasTitleVars s, HasCommonVars s, MonadReader Config m, MonadState s m, Renderer m, HasInput m, SceneManager m, HUD m, AudioSfx m) => m ()
 titleStep' = do
-  inout <- getInput
+  input <- getInput
   when (ksStatus (iSpace input) == KeyStatus'Pressed) (toScene Scene'Play)
   updateTitle
   drawTitle
 
-updateTitle :: ( HasTitleVars s
-               , HasCommonVars s
-               , MonadReader Config m
-               , MonadState s m
-               , Renderer m
-               , HasInput m
-               , SceneManager m
-               , AudioSfx m) => m ()
+updateTitle :: (HasTitleVars s, HasCommonVars s, MonadReader Config m, MonadState s m, Renderer m, HasInput m, SceneManager m, AudioSfx m) => m ()
 updateTitle = do
-  dinoAnimation <- getDinoAnimations
+  dinoAnimations <- getDinoAnimations
   dinoPos <- gets (tvDinoPos . view titleVars)
   let dinoPos' = Animate.stepPosition dinoAnimations dinoPos frameDeltaSeconds
 
   mountainAnimations <- getMountainAnimations
-  dinoPos <- gets (tvDinoPos . view titleVars)
+  mountainPos <- gets (tvMountainPos . view titleVars)
   let mountainPos' = Animate.stepPosition mountainAnimations mountainPos frameDeltaSeconds
 
-  riverAnimations <- getRiveAnimations
+  riverAnimations <- getRiverAnimations
   riverPos <- gets (tvRiverPos . view titleVars)
   let riverPos' = Animate.stepPosition riverAnimations riverPos frameDeltaSeconds
 
@@ -67,27 +52,28 @@ updateTitle = do
     , tvFlashing = tvFlashing tv + 0.025
     })
 
-drawTitle :: ( HasTitleVars s
-             , HasCommonVars s
-             , MonadReader Config m
-             , MonadState s m
-             , Renderer m
-             , HasInput m
-             , SceneManager m
-             , HUD m) => m ()
+drawTitle :: (HasTitleVars s, HasCommonVars s, MonadReader Config m, MonadState s m, Renderer m, HasInput m, SceneManager m, HUD m) => m ()
 drawTitle = do
   tv <- gets (view titleVars)
   quake <- gets (cvQuake . view commonVars)
 
   mountainAnimations <- getMountainAnimations
   let mountainPos = tvMountainPos tv
-      mountainLoc = Animate.currentLocation riverAnimations riverPos
+  let mountainLoc = Animate.currentLocation mountainAnimations mountainPos
+  drawMountain mountainLoc $ applyQuakeToMountain quake (0, mountainY)
+
+  drawJungle $ applyQuakeToJungle quake (0, jungleY)
+  drawGround $ applyQuakeToGround quake (0, groundY)
+
+  riverAnimations <- getRiverAnimations
+  let riverPos = tvRiverPos tv
+  let riverLoc = Animate.currentLocation riverAnimations riverPos
   drawRiver riverLoc $ applyQuakeToRiver quake (0, riverY)
 
-  dinoAnimation <- getDinoAnimations
+  dinoAnimations <- getDinoAnimations
   let dinoPos = tvDinoPos tv
-      dinoLoc = Animate.currentLocation dinoAnimations dinoPos
-  drawDino dinoLoc $ applyQuakeToGround quake (trucate dinoX, dinoY)
+  let dinoLoc = Animate.currentLocation dinoAnimations dinoPos
+  drawDino dinoLoc $ applyQuakeToGround quake (truncate dinoX, dinoY)
 
   drawHiscore
 

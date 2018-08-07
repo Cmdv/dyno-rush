@@ -4,21 +4,21 @@ import Control.Lens (view)
 import Control.Monad (when)
 import Control.Monad.State (MonadState, gets)
 
-import DinoRush.Engine.Common
-import DinoRush.Engine.Play
-import DinoRush.Engine.Font
 import DinoRush.Effect.Renderer
+import DinoRush.Engine.Common
+import DinoRush.Engine.Font
+import DinoRush.Engine.Play
 
-class Monad  => HUD m where
+class Monad m => HUD m where
   drawHiscore :: m ()
   drawScore :: m ()
-  drawControl :: m ()
+  drawControls :: m ()
 
 drawHiscore' :: (Renderer m, MonadState s m, HasCommonVars s) => m ()
 drawHiscore' = do
   cv <- gets (view commonVars)
   drawHiscoreText (1150, 16)
-  drawNumbers (fromIntegral $ cvHighscore cv) (1234, 50)
+  drawNumbers (fromIntegral $ cvHiscore cv) (1234, 50)
 
 drawScore' :: (Renderer m, MonadState s m, HasPlayVars s) => m ()
 drawScore' = do

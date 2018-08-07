@@ -15,6 +15,7 @@ import DinoRush.Engine.Title
 data Vars = Vars
   { vCommon :: CommonVars
   , vScene :: Scene
+  , vNextScene :: Scene
   , vTitle :: TitleVars
   , vPlay :: PlayVars
   , vGameOver :: GameOverVars
@@ -23,16 +24,7 @@ data Vars = Vars
   } deriving (Show, Eq)
 
 initVars :: [(Int, ObstacleTag)] -> Vars
-initVars mkObstacles =
-  Vars
-    initCommonVars
-    Scene'Title
-    Scene'Title
-    initTitleVars
-    (initPlayVars mkObstacles)
-    initGameOverVars
-    initInput
-    initCamera
+initVars mkObstacles = Vars initCommonVars Scene'Title Scene'Title initTitleVars (initPlayVars mkObstacles) initGameOverVars initInput initCamera
 
 instance HasCommonVars Vars where
   commonVars = lens vCommon (\v s -> v { vCommon = s })

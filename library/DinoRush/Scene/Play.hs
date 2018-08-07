@@ -2,64 +2,44 @@
 module DinoRush.Scene.Play where
 
 import qualified Animate
-import           Control.Monad (when)
-import           Control.Lens hiding (zoom)
-import           Control.Monad.State (MonadState(..), modify, gets)
-import           Data.Foldable (forM_)
-import           KeyState
+import Control.Monad (when)
+import Control.Lens hiding (zoom)
+import Control.Monad.State (MonadState(..), modify, gets)
+import Data.Foldable (forM_)
+import KeyState
 
-import           DinoRush.Effect.Audio
-import           DinoRush.Effect.Camera
-import           DinoRush.Effect.Clock
-import           DinoRush.Effect.HUD
-import           DinoRush.Effect.Logger
-import           DinoRush.Effect.Renderer
-import           DinoRush.Effect.Sfx
-import           DinoRush.Engine.Camera
-import           DinoRush.Engine.Common
-import           DinoRush.Engine.Dino
-import           DinoRush.Engine.Frame
-import           DinoRush.Engine.Input
-import           DinoRush.Engine.Obstacle
-import           DinoRush.Engine.Physics
-import           DinoRush.Engine.Play
-import           DinoRush.Engine.Quake
-import           DinoRush.Engine.Sfx
-import           DinoRush.Engine.Step
-import           DinoRush.Manager.Input
-import           DinoRush.Manager.Scene
+import DinoRush.Effect.Audio
+import DinoRush.Effect.Clock
+import DinoRush.Effect.Camera
+import DinoRush.Effect.Logger
+import DinoRush.Effect.HUD
+import DinoRush.Effect.Renderer
+import DinoRush.Effect.Sfx
+import DinoRush.Engine.Common
+import DinoRush.Engine.Input
+import DinoRush.Engine.Camera
+import DinoRush.Engine.Frame
+import DinoRush.Engine.Step
+import DinoRush.Engine.Dino
+import DinoRush.Engine.Obstacle
+import DinoRush.Engine.Play
+import DinoRush.Engine.Sfx
+import DinoRush.Engine.Quake
+import DinoRush.Engine.Physics
+import DinoRush.Manager.Scene
+import DinoRush.Manager.Input
 
 class Monad m => Play m where
   playStep :: m ()
 
-playStep' :: ( HasPlayVars s
-             , HasCommonVars s
-             , MonadState s m
-             , Logger m
-             , CameraControl m
-             , Clock m
-             , Renderer m
-             , Audio m
-             , AudioSfx m
-             , HasInput m
-             , SceneManager m
-             , HUD m) => m ()
+playStep' :: (HasPlayVars s, HasCommonVars s, MonadState s m, Logger m, CameraControl m, Clock m, Renderer m, Audio m, AudioSfx m, HasInput m, SceneManager m, HUD m) => m ()
 playStep' = do
   input <- getInput
   when (ksStatus (iSpace input) == KeyStatus'Pressed) (toScene Scene'Pause)
   updatePlay
   drawPlay
 
-updatePlay :: ( HasPlayVars s
-              , HasCommonVars s
-              , MonadState s m
-              , Logger m
-              , Clock m
-              , CameraControl m
-              , Renderer m
-              , HasInput m
-              , AudioSfx m
-              , SceneManager m) => m ()
+updatePlay :: (HasPlayVars s, HasCommonVars s, MonadState s m, Logger m, Clock m, CameraControl m, Renderer m, HasInput m, AudioSfx m, SceneManager m) => m ()
 updatePlay = do
   input <- getInput
   da <- (stepDinoAction input . pvDinoState) <$> gets (view playVars)
@@ -76,12 +56,7 @@ updatePlay = do
   isDead <- getDead
   when isDead (toScene Scene'Death)
 
-drawPlay :: ( HasPlayVars s
-            , HasCommonVars s
-            , MonadState s m
-            , Renderer m
-            , CameraControl m
-            , HUD m) => m ()
+drawPlay :: (HasPlayVars s, HasCommonVars s, MonadState s m, Renderer m, CameraControl m, HUD m) => m ()
 drawPlay = do
   dinoAnimations <- getDinoAnimations
   mountainAnimations <- getMountainAnimations
@@ -105,7 +80,7 @@ drawPlay = do
   enableZoom
   where
     drawStocks pv dinoAnimations =
-      flip mapM_ [1..(fromIntegral $ pvStocks pv - 1)] $ \stock -> do
+      forM_ [1..(fromIntegral $ pvStocks pv - 1)] $ \stock -> do
         let idleLoc = Animate.currentLocation dinoAnimations (Animate.initPosition DinoKey'Kick)
         drawDino idleLoc (20 + 48 * (stock - 1), 32)
 

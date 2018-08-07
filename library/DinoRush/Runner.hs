@@ -37,8 +37,8 @@ titleTransition = do
 
 playTransition :: (HasPlayVars a, MonadState a m, Audio m) => m ()
 playTransition = do
-  PlayVars{ pvUpcomingObstacles} <- gets (view playVars)
-  modify $ playVars .~ (initPlayerVars pvUpcomingObstacles)
+  PlayVars{pvUpcomingObstacles} <- gets (view playVars)
+  modify $ playVars .~ (initPlayVars pvUpcomingObstacles)
   playGameMusic
 
 deathTransition :: (Audio m) => m ()
@@ -53,7 +53,7 @@ playToPause :: Audio m => m ()
 playToPause = lowerGameMusic
 
 toScene' :: MonadState Vars m => Scene -> m ()
-toScene' scene = modify (\v -> v { vNextSceen = scene})
+toScene' scene = modify (\v -> v { vNextScene = scene })
 
 mainLoop ::
   ( MonadReader Config m
@@ -73,18 +73,22 @@ mainLoop ::
   ) => m ()
 mainLoop = do
   updateInput
-  input <- gets vScene
+  input <- getInput
+  clearScreen
+  clearSfx
+  scene <- gets vScene
   updateQuake
   step scene
   playSfx
   drawScreen
   delayMilliseconds frameDeltaMilliseconds
-  nextScene <- gets vNextSceen
+  nextScene <- gets vNextScene
   stepScene scene nextScene
   let quit = nextScene == Scene'Quit || iQuit input || ksStatus (iEscape input) == KeyStatus'Pressed
   unless quit mainLoop
   where
-    step scene = do
+
+    step scene =
       case scene of
         Scene'Title -> titleStep
         Scene'Play -> playStep
@@ -93,7 +97,7 @@ mainLoop = do
         Scene'GameOver -> gameOverStep
         Scene'Quit -> return ()
 
-    stepScene scene nextScene = do
+    stepScene scene nextScene =
       when (nextScene /= scene) $ do
         case nextScene of
           Scene'Title -> titleTransition

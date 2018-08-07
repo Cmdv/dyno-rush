@@ -30,7 +30,7 @@ deathStep' :: ( HasPlayVars s
 deathStep' = do
   updateDeath
   drawPlay
-  height <- gets (dsHeight, pvDinoState . view playVars)
+  height <- gets (dsHeight . pvDinoState . view playVars)
   case height of
     Nothing -> return ()
     Just h -> when (h > pi / 2) (toScene Scene'GameOver)
