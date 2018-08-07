@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ab88454366ba511a9a8da28cfe468da7189ae5723f26bdc8ac7c577d567bac6c
+-- hash: a8b1c2306b267a80fa8bae83865e3002122769505e4ed54fedfa8e2f429096dc
 
 name:           dino-rush
 version:        0.0.0
@@ -32,6 +32,26 @@ source-repository head
 library
   exposed-modules:
       DinoRush
+      DinoRush.Config
+      DinoRush.Effect.Audio
+      DinoRush.Effect.Camera
+      DinoRush.Effect.Clock
+      DinoRush.Effect.HUD
+      DinoRush.Effect.Logger
+      DinoRush.Effect.Quake
+      DinoRush.Effect.Renderer
+      DinoRush.Effect.Sfx
+      DinoRush.Engine.Scene
+      DinoRush.Engine.Sfx
+      DinoRush.Manager.Input
+      DinoRush.Manager.Scene
+      DinoRush.Runner
+      DinoRush.Scene.Death
+      DinoRush.Scene.GameOver
+      DinoRush.Scene.Pause
+      DinoRush.Scene.Play
+      DinoRush.Scene.Title
+      DinoRush.State
   other-modules:
       Paths_dino_rush
   hs-source-dirs:
